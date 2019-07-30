@@ -1,3 +1,34 @@
+# DEMO ONLY
+
+This is a fork for bug demonstration only.
+
+Application silently crashes when Accounts#createUser is called.
+
+Manual debugging shows that Meteor's Future fails to resolve result from previously called `bcrypt.hash` function. See line 90 at [debugger snapshot](img/snapshot.png).
+
+![Debugger snapshot](img/snapshot.png)
+
+Steps to reproduce:
+
+1. Run `docker-compose up --build -d` from `/example` directory. Note that app can start too early to connect to MongoDB with success, so just restart its container if app hangs up.
+2. Open [app root](http://localhost) in the browser.
+3. Click on the "Recreate user" button.
+
+That's it. App successfully crashed. 😊
+
+Crashed container log does not contain line:
+```
+---> user created with id: <some_mongo_id>
+```
+
+You can debug this app's server code by adding `debugger` word where you need a breakpoint.
+Also see [breakpoint](example/app/server/main.js) at line 12 used to make [snapshot](img/snapshot.png).
+
+You can patch this bug by `meteor npm uninstall bcrypt` command.
+Thus Meteor will use pure JS bcrypt instead of native C++ version.
+
+It seems that the build pipeline of the base Docker image was broken somewhere.
+
 # Base Docker Image for Meteor Apps
 
 This repo contains a base Docker image for use by [Meteor](https://www.meteor.com/) apps built using a [multistage Dockerfile](https://docs.docker.com/develop/develop-images/multistage-build/). You might want to use this base because:

@@ -40,4 +40,4 @@ RUN bash $SCRIPTS_FOLDER/build-meteor-npm-dependencies.sh \
 # Start app
 ENTRYPOINT ["/docker/entrypoint.sh"]
 
-CMD ["node", "main.js"]
+CMD ["node", "--inspect=0.0.0.0:9229", "main.js"]
